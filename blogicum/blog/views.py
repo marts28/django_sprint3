@@ -13,7 +13,8 @@ def index(request):
         pub_date__lte=current_time,
         is_published=True,
         category__is_published=True
-    ).select_related('author').select_related('location').order_by('-pub_date')[:5]
+    ).select_related('author'
+                     ).select_related('location').order_by('-pub_date')[:5]
 
     context = {
         'post_list': posts,
@@ -41,7 +42,8 @@ def post_detail(request, pk):
 def category_posts(request, category_slug):
     template = 'blog/category.html'
 
-    category = get_object_or_404(Category, slug=category_slug, is_published=True)
+    category = get_object_or_404(Category,
+                                 slug=category_slug, is_published=True)
 
     current_time = timezone.now()
     post_list = Post.objects.select_related('category').filter(
