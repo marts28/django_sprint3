@@ -9,12 +9,15 @@ from blog.models import Post, Category
 def index(request):
     template = 'blog/index.html'
     current_time = timezone.now()
-    posts = Post.objects.select_related('category').filter(
-        pub_date__lte=current_time,
-        is_published=True,
-        category__is_published=True
-    ).select_related('author'
-                     ).select_related('location').order_by('-pub_date')[:5]
+    posts = Post.objects. \
+        select_related('category'). \
+        select_related('author'). \
+        select_related('location'). \
+        filter(
+            pub_date__lte=current_time,
+            is_published=True,
+            category__is_published=True
+        )[:5]
 
     context = {
         'post_list': posts,
@@ -23,16 +26,17 @@ def index(request):
     return render(request, template, context)
 
 
-def post_detail(request, pk):
-    template = 'blog/detail.html'
-
+def post_detail(request, post_id):
     current_time = timezone.now()
 
     post = get_object_or_404(
-        Post, id=pk, pub_date__lte=current_time,
-        is_published=True, category__is_published=True
+        Post,
+        id=post_id,
+        pub_date__lte=current_time,
+        is_published=True,
+        category__is_published=True
     )
-
+    template = 'blog/detail.html'
     context = {
         'post': post,
     }
@@ -46,11 +50,15 @@ def category_posts(request, category_slug):
                                  slug=category_slug, is_published=True)
 
     current_time = timezone.now()
-    post_list = Post.objects.select_related('category').filter(
+    post_list = Post.objects. \
+        select_related('category'). \
+        select_related('author'). \
+        select_related('location'). \
+        filter(
         pub_date__lte=current_time,
         is_published=True,
-        category__slug=category_slug
-    ).select_related('author').select_related('location')
+        category=category
+    )
 
     context = {
         'category': category,
