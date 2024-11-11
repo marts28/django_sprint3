@@ -8,16 +8,9 @@ from blog.models import Post, Category
 
 def index(request):
     template = 'blog/index.html'
-    current_time = timezone.now()
-    posts = Post.objects. \
-        select_related('category'). \
-        select_related('author'). \
-        select_related('location'). \
-        filter(
-            pub_date__lte=current_time,
-            is_published=True,
-            category__is_published=True
-        )[:5]
+    posts = filter_query(
+        Post.objects.select_related('location', 'category', 'author')
+    )[:5]
 
     context = {
         'post_list': posts,
@@ -50,14 +43,10 @@ def category_posts(request, category_slug):
                                  slug=category_slug, is_published=True)
 
     current_time = timezone.now()
-    post_list = Post.objects. \
-        select_related('category'). \
-        select_related('author'). \
-        select_related('location'). \
-        filter(
-        pub_date__lte=current_time,
-        is_published=True,
-        category=category
+
+    post_list = filter_query(
+        category.posts.select_related('location', 'category', 'author'),
+        True
     )
 
     context = {
@@ -65,3 +54,14 @@ def category_posts(request, category_slug):
         'post_list': post_list
     }
     return render(request, template, context)
+
+
+def filter_query(query_set, is_category=False):
+    current_time = timezone.now()
+    if is_category:
+        return query_set.filter(pub_date__lte=current_time,
+                                is_published=True)
+    else:
+        return query_set.filter(pub_date__lte=current_time,
+                                is_published=True,
+                                category__is_published=True)

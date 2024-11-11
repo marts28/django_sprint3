@@ -5,6 +5,7 @@ from django.db import models
 
 User = get_user_model()
 
+
 class AbstrCl(models.Model):
     is_published = models.BooleanField(
         "Опубликовано",
