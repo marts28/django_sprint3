@@ -42,8 +42,6 @@ def category_posts(request, category_slug):
     category = get_object_or_404(Category,
                                  slug=category_slug, is_published=True)
 
-    current_time = timezone.now()
-
     post_list = filter_query(
         category.posts.select_related('location', 'category', 'author'),
         True

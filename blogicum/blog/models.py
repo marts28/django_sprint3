@@ -8,12 +8,12 @@ User = get_user_model()
 
 class AbstrCl(models.Model):
     is_published = models.BooleanField(
-        "Опубликовано",
+        verbose_name="Опубликовано",
         default=True,
         help_text="Снимите галочку, чтобы скрыть публикацию."
     )
     created_at = models.DateTimeField(
-        "Добавлено",
+        verbose_name="Добавлено",
         auto_now_add=True
     )
 
@@ -22,10 +22,10 @@ class AbstrCl(models.Model):
 
 
 class Category(AbstrCl):
-    title = models.CharField("Заголовок", max_length=256)
-    description = models.TextField("Описание")
+    title = models.CharField(verbose_name="Заголовок", max_length=256)
+    description = models.TextField(verbose_name="Описание")
     slug = models.SlugField(
-        "Идентификатор",
+        verbose_name="Идентификатор",
         unique=True,
         help_text="Идентификатор страницы для URL; разрешены символы"
                   " латиницы, цифры, дефис и подчёркивание."
@@ -41,7 +41,7 @@ class Category(AbstrCl):
 
 class Location(AbstrCl):
     name = models.CharField(
-        "Название места",
+        verbose_name="Название места",
         max_length=256
     )
 
@@ -55,12 +55,12 @@ class Location(AbstrCl):
 
 class Post(AbstrCl):
     title = models.CharField(
-        "Заголовок",
+        verbose_name="Заголовок",
         max_length=256
     )
     text = models.TextField("Текст")
     pub_date = models.DateTimeField(
-        "Дата и время публикации",
+        verbose_name="Дата и время публикации",
         help_text="Если установить дату и время в будущем "
                   "— можно делать отложенные публикации."
     )
